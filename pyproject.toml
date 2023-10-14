@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flake8-import-relative-two"
-version = "0.1.0"
+version = "0.2.0"
 description = "Flake8 plugin that checks for relative imports up to a maximum of level two"
 repository = "https://github.com/bartoszcholewa/flake8-import-relative-two"
 authors = ["Bartosz Cholewa <bbcholewa@gmail.com>"]
@@ -34,9 +34,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-wheel = "^0.41.2"
-setuptools = ">=61.2"
-flake8 = "^6.1.0"
+flake8 = "^6.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -45,6 +43,8 @@ black = "^23.9.1"
 pytest-cov = "^4.1.0"
 tox = "^4.11.3"
 codecov = "^2.1.13"
+wheel = "^0.41.2"
+setuptools = ">=61.2"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
