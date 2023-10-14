@@ -35,8 +35,9 @@ jobs:
 
     - name: Run tests
       run: |
-        poetry run pytest --cov
+        poetry run pytest --cov=./ --cov-report=xml
         poetry run tox -e sdist_install
+        poetry run codecov
 
     - name: Lint code
       run: poetry run tox -e flake8

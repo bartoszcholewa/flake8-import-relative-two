@@ -44,6 +44,7 @@ pytest = "^7.4.2"
 black = "^23.9.1"
 pytest-cov = "^4.1.0"
 tox = "^4.11.3"
+codecov = "^2.1.13"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
