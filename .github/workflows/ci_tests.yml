@@ -1,0 +1,84 @@
+name: ci-tests
+
+on: push
+
+jobs:
+  all_checks:
+    name: Run all tests, lints, etc. (Python 3.10)
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v3
+
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install poetry
+      uses: abatilo/actions-poetry@v2
+
+    - name: Setup a local virtual environment (if no poetry.toml file)
+      run: |
+        poetry config virtualenvs.create true --local
+        poetry config virtualenvs.in-project true --local
+
+    - uses: actions/cache@v3
+      name: Define a cache for the virtual environment based on the dependencies lock file
+      with:
+        path: ./.venv
+        key: venv-${{ hashFiles('poetry.lock') }}
+    - name: Install the project dependencies
+      run: poetry install
+
+    - name: Run tests
+      run: |
+        poetry run pytest --cov
+        poetry run tox -e sdist_install
+
+    - name: Lint code
+      run: poetry run tox -e flake8
+
+    - name: Transmit to Codecov
+      run: codecov
+
+
+  just_tests:
+    name: Run only the test suite
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12']
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v3
+
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python }}
+
+    - name: Install poetry
+      uses: abatilo/actions-poetry@v2
+
+    - name: Setup a local virtual environment (if no poetry.toml file)
+      run: |
+        poetry config virtualenvs.create true --local
+        poetry config virtualenvs.in-project true --local
+
+    - uses: actions/cache@v3
+      name: Define a cache for the virtual environment based on the dependencies lock file
+      with:
+        path: ./.venv
+        key: venv-${{ hashFiles('poetry.lock') }}
+    - name: Install the project dependencies
+      run: poetry install
+
+    - name: Run tests
+      run: |
+        poetry run pytest --cov
+        poetry run tox -e sdist_install
